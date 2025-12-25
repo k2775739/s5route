@@ -1,0 +1,13 @@
+{
+  "name": "s5route",
+  "version": "0.1.0",
+  "description": "V2Ray outbound selector with SOCKS5 inbound and Apple-style web UI",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
