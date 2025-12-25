@@ -91,7 +91,7 @@ function renderSubscriptions(subscriptions) {
     removeBtn.textContent = "删除";
     removeBtn.addEventListener("click", async () => {
       try {
-        state.data = await api(`/api/subscriptions/${sub.id}`, { method: "DELETE" });
+        state.data = await api(`api/subscriptions/${sub.id}`, { method: "DELETE" });
         render();
       } catch (err) {
         toast(err.message);
@@ -140,7 +140,7 @@ function renderNodes(nodes, selectedNodeId) {
         return;
       }
       try {
-        state.data = await api("/api/select", {
+        state.data = await api("api/select", {
           method: "POST",
           body: JSON.stringify({ nodeId: node.id })
         });
@@ -164,12 +164,12 @@ function renderNodes(nodes, selectedNodeId) {
 }
 
 async function refreshAll() {
-  state.data = await api("/api/subscriptions/refresh", { method: "POST" });
+  state.data = await api("api/subscriptions/refresh", { method: "POST" });
   render();
 }
 
 async function init() {
-  state.data = await api("/api/state");
+  state.data = await api("api/state");
   render();
 
   qs("#subForm").addEventListener("submit", async (event) => {
@@ -181,7 +181,7 @@ async function init() {
     };
     if (!payload.url) return;
     try {
-      state.data = await api("/api/subscriptions", {
+      state.data = await api("api/subscriptions", {
         method: "POST",
         body: JSON.stringify(payload)
       });
@@ -207,7 +207,7 @@ async function init() {
       if (accessToken) {
         payload.accessToken = accessToken;
       }
-      state.data = await api("/api/settings", {
+      state.data = await api("api/settings", {
         method: "POST",
         body: JSON.stringify(payload)
       });
@@ -230,10 +230,10 @@ async function init() {
   qs("#toggleV2").addEventListener("click", async () => {
     try {
       if (state.data?.v2ray?.running) {
-        state.data = await api("/api/v2ray/stop", { method: "POST" });
+        state.data = await api("api/v2ray/stop", { method: "POST" });
         toast("V2Ray 已停止");
       } else {
-        state.data = await api("/api/v2ray/start", { method: "POST" });
+        state.data = await api("api/v2ray/start", { method: "POST" });
         toast("V2Ray 已启动");
       }
       render();
@@ -244,7 +244,7 @@ async function init() {
 
   qs("#stopV2").addEventListener("click", async () => {
     try {
-      state.data = await api("/api/v2ray/stop", { method: "POST" });
+      state.data = await api("api/v2ray/stop", { method: "POST" });
       render();
       toast("V2Ray 已停止");
     } catch (err) {
