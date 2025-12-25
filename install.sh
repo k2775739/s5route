@@ -23,7 +23,11 @@ install_node() {
   echo "Installing Node.js 20.x via NodeSource..."
   ${SUDO_CMD} apt-get update -y
   ${SUDO_CMD} apt-get install -y ca-certificates curl gnupg
-  curl -fsSL https://deb.nodesource.com/setup_20.x | ${SUDO_CMD} -E bash -
+  if [[ -n "${SUDO_CMD}" ]]; then
+    curl -fsSL https://deb.nodesource.com/setup_20.x | ${SUDO_CMD} -E bash -
+  else
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+  fi
   ${SUDO_CMD} apt-get install -y nodejs
 }
 
@@ -61,7 +65,7 @@ else
   (cd "${ROOT_DIR}" && "${NPM_BIN}" install --omit=dev)
 fi
 
-cat <<SERVICE | sudo tee "$SERVICE_PATH" >/dev/null
+cat <<SERVICE | ${SUDO_CMD} tee "$SERVICE_PATH" >/dev/null
 [Unit]
 Description=s5route (V2Ray outbound selector)
 After=network.target
@@ -81,8 +85,8 @@ EnvironmentFile=-/etc/default/s5route
 WantedBy=multi-user.target
 SERVICE
 
-sudo systemctl daemon-reload
-sudo systemctl enable --now "$SERVICE_NAME"
+${SUDO_CMD} systemctl daemon-reload
+${SUDO_CMD} systemctl enable --now "$SERVICE_NAME"
 
 echo "Installed and started: ${SERVICE_NAME}"
 echo "Service file: ${SERVICE_PATH}"
