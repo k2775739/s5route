@@ -23,13 +23,16 @@
 
       <section class="layout">
         <div class="main-column">
-          <div class="card" id="nodesCard">
-            <div class="card-head">
-              <h2>节点出口</h2>
+        <div class="card" id="nodesCard">
+          <div class="card-head">
+            <h2>节点出口</h2>
+            <div class="node-actions">
               <input type="search" id="nodeSearch" placeholder="搜索节点名称" />
+              <button class="ghost" id="refreshLatency">刷新延迟</button>
             </div>
-            <div class="list" id="nodesList"></div>
           </div>
+          <div class="list" id="nodesList"></div>
+        </div>
 
           <div class="card" id="subsCard">
             <h2>订阅列表</h2>

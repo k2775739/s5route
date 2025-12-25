@@ -1,6 +1,8 @@
 const state = {
   data: null,
-  filter: ""
+  filter: "",
+  latency: {},
+  latencyLoading: false
 };
 
 const qs = (sel) => document.querySelector(sel);
@@ -118,6 +120,7 @@ function renderNodes(nodes, selectedNodeId) {
   }
 
   filtered.forEach((node) => {
+    const latencyInfo = getLatencyInfo(node.id);
     const item = document.createElement("div");
     item.className = "list-item node-item" + (node.id === selectedNodeId ? " selected" : "");
     item.tabIndex = 0;
@@ -133,6 +136,7 @@ function renderNodes(nodes, selectedNodeId) {
       <div class="node-tags">
         <span class="badge">${node.protocol.toUpperCase()}</span>
         ${node.id === selectedNodeId ? `<span class="badge selected-badge">已选择</span>` : ""}
+        <span class="latency-chip ${latencyInfo.className}">${latencyInfo.text}</span>
       </div>
     `;
     const selectNode = async () => {
@@ -163,14 +167,51 @@ function renderNodes(nodes, selectedNodeId) {
   });
 }
 
+function getLatencyInfo(nodeId) {
+  const info = state.latency?.[nodeId];
+  if (!info) {
+    return {
+      text: state.latencyLoading ? "测试中" : "-",
+      className: "latency-idle"
+    };
+  }
+  if (typeof info.ms === "number") {
+    return {
+      text: `${Math.round(info.ms)} ms`,
+      className: "latency-ok"
+    };
+  }
+  if (info.error === "timeout") {
+    return { text: "超时", className: "latency-timeout" };
+  }
+  return { text: "失败", className: "latency-fail" };
+}
+
 async function refreshAll() {
   state.data = await api("api/subscriptions/refresh", { method: "POST" });
   render();
+  await refreshLatency();
+}
+
+async function refreshLatency(force = false) {
+  state.latencyLoading = true;
+  render();
+  try {
+    const suffix = force ? "?force=1" : "";
+    const payload = await api(`api/latency${suffix}`);
+    state.latency = payload.latencies || {};
+  } catch (err) {
+    toast(err.message);
+  } finally {
+    state.latencyLoading = false;
+    render();
+  }
 }
 
 async function init() {
   state.data = await api("api/state");
   render();
+  refreshLatency();
 
   qs("#subForm").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -188,6 +229,7 @@ async function init() {
       form.reset();
       render();
       toast("订阅已添加");
+      refreshLatency();
     } catch (err) {
       toast(err.message);
     }
@@ -255,6 +297,15 @@ async function init() {
   qs("#nodeSearch").addEventListener("input", (event) => {
     state.filter = event.target.value || "";
     render();
+  });
+
+  qs("#refreshLatency").addEventListener("click", async () => {
+    try {
+      await refreshLatency(true);
+      toast("延迟已刷新");
+    } catch (err) {
+      toast(err.message);
+    }
   });
 }
 

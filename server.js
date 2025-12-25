@@ -11,12 +11,14 @@ import {
   getRuntimeStatus,
   refreshRuntimeStatus
 } from "./lib/v2ray.js";
+import { measureNodes } from "./lib/latency.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 22007;
+const latencyCache = new Map();
 
 app.use(express.json({ limit: "1mb" }));
 
@@ -121,6 +123,17 @@ app.get("/api/state", async (req, res) => {
   await refreshRuntimeStatus(state);
   await saveState(state);
   res.json(sanitizeState(state));
+});
+
+app.get("/api/latency", async (req, res) => {
+  const state = normalizeState(await getState());
+  const nodes = Object.values(state.nodes || {});
+  const force = req.query?.force === "1";
+  const latencies = await measureNodes(nodes, {
+    cache: latencyCache,
+    ttlMs: force ? 0 : undefined
+  });
+  res.json({ latencies });
 });
 
 app.post("/api/settings", async (req, res) => {

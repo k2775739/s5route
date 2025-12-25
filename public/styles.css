@@ -161,6 +161,25 @@ button.ghost:hover {
   margin-bottom: 15px;
 }
 
+.node-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.node-actions button {
+  padding: 8px 14px;
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .node-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 .status-row {
   display: flex;
   justify-content: space-between;
@@ -269,6 +288,32 @@ input {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.latency-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  background: rgba(100, 116, 139, 0.12);
+  color: #64748b;
+}
+
+.latency-ok {
+  background: rgba(34, 197, 94, 0.16);
+  color: #15803d;
+}
+
+.latency-timeout {
+  background: rgba(234, 88, 12, 0.18);
+  color: #c2410c;
+}
+
+.latency-fail {
+  background: rgba(239, 68, 68, 0.16);
+  color: #b91c1c;
 }
 
 .badge {
