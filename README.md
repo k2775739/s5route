@@ -4,7 +4,7 @@
 
 ## 功能
 
-- 添加并刷新 V2Ray 订阅（vmess/vless/trojan）。
+- 添加并刷新 V2Ray 订阅（vmess/vless/trojan/ss）。
 - 订阅节点一键作为出口选择。
 - SOCKS5 入口地址与端口可配置。
 - Web UI 采用 Apple 风格设计。
