@@ -39,7 +39,7 @@ function render() {
 
   const toggleBtn = qs("#toggleV2");
   if (toggleBtn) {
-    toggleBtn.textContent = v2ray.running ? "关闭 V2Ray" : "启动 V2Ray";
+    toggleBtn.textContent = v2ray.running ? "关闭 Xray" : "启动 Xray";
   }
 
   const settingsForm = qs("#settingsForm");
@@ -273,10 +273,10 @@ async function init() {
     try {
       if (state.data?.v2ray?.running) {
         state.data = await api("api/v2ray/stop", { method: "POST" });
-        toast("V2Ray 已停止");
+        toast("Xray 已停止");
       } else {
         state.data = await api("api/v2ray/start", { method: "POST" });
-        toast("V2Ray 已启动");
+        toast("Xray 已启动");
       }
       render();
     } catch (err) {
@@ -288,7 +288,7 @@ async function init() {
     try {
       state.data = await api("api/v2ray/stop", { method: "POST" });
       render();
-      toast("V2Ray 已停止");
+      toast("Xray 已停止");
     } catch (err) {
       toast(err.message);
     }

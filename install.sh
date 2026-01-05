@@ -67,7 +67,7 @@ fi
 
 cat <<SERVICE | ${SUDO_CMD} tee "$SERVICE_PATH" >/dev/null
 [Unit]
-Description=s5route (V2Ray outbound selector)
+Description=s5route (Xray outbound selector)
 After=network.target
 
 [Service]
